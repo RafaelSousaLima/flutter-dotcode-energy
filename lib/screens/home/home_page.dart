@@ -98,6 +98,9 @@ class _HomePageState extends State<HomePage> {
     bool yellowFlag = prefs.getBool("YELLOW_FLAG")!;
     bool redFlag = prefs.getBool("RED_FLAG")!;
     bool tenPercent = prefs.getBool("TEN_PERCENT")!;
+    bool lvlOne = prefs.getBool("LVL_ONE")!;
+    bool lvlTwo = prefs.getBool("LVL_TWO")!;
+    bool waterShortage = prefs.getBool("WAT_SHORT")!;
 
     double qtdAtual = double.parse(_controllerNumber.text) - lastNumber;
     double total = (tusd * qtdAtual) + (te * qtdAtual);
@@ -108,7 +111,15 @@ class _HomePageState extends State<HomePage> {
     // https://agenciabrasil.ebc.com.br/economia/noticia/2021-07/agencia-brasil-explica-como-funcionam-bandeiras-tarifarias
 
     if (redFlag) {
-      total = total + (9.492 * (qtdAtual / 100));
+      if (lvlOne) {
+        total = total + (3.971 * (qtdAtual / 100));
+      } else if (lvlTwo) {
+        total = total + (9.492 * (qtdAtual / 100));
+      }
+    }
+
+    if (waterShortage) {
+      total = total + (14.20 * (qtdAtual / 100));
     }
 
     if (tenPercent) {

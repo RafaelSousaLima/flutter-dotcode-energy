@@ -17,6 +17,11 @@ class _SettingsPageState extends State<SettingsPage> {
   bool isBandeiraVermelha = false;
   bool isTenPercentOthers = false;
 
+  bool isBandeiraVermelhaPatamarUm = false;
+  bool isBandeiraVermelhaPatamarDois = false;
+
+  bool isWaterShortage = false;
+
   @override
   void initState() {
     getInfo();
@@ -71,7 +76,15 @@ class _SettingsPageState extends State<SettingsPage> {
                         value: isBandeiraAmerela,
                         onChanged: (value) {
                           setState(() {
-                            isBandeiraAmerela = !isBandeiraAmerela;
+                            if (value!) {
+                              isBandeiraAmerela = value;
+                              isBandeiraVermelha = false;
+                              isBandeiraVermelhaPatamarUm = false;
+                              isBandeiraVermelhaPatamarDois = false;
+                              isWaterShortage = false;
+                            } else {
+                              isBandeiraAmerela = value;
+                            }
                           });
                         },
                       ),
@@ -84,11 +97,92 @@ class _SettingsPageState extends State<SettingsPage> {
                         value: isBandeiraVermelha,
                         onChanged: (value) {
                           setState(() {
-                            isBandeiraVermelha = !isBandeiraVermelha;
+                            if (value!) {
+                              isBandeiraVermelha = value;
+                              isBandeiraAmerela = false;
+                              isWaterShortage = false;
+                            } else {
+                              isBandeiraVermelha = value;
+                            }
                           });
                         },
                       ),
                       const Text("Bandeira Vermelha?"),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(20.0, 0.0, 10.0, 0.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Checkbox(
+                                    value: isBandeiraVermelhaPatamarUm,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        if (value!) {
+                                          isBandeiraVermelhaPatamarUm = value;
+                                          isBandeiraVermelhaPatamarDois = false;
+                                        } else {
+                                          isBandeiraVermelhaPatamarUm = value;
+                                        }
+                                      });
+                                    }),
+                                const Text("Patamar Um?"),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(10.0, 0.0, 20.0, 0.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Checkbox(
+                                    value: isBandeiraVermelhaPatamarDois,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        if (value!) {
+                                          isBandeiraVermelhaPatamarDois = value;
+                                          isBandeiraVermelhaPatamarUm = false;
+                                        } else {
+                                          isBandeiraVermelhaPatamarDois = value;
+                                        }
+                                      });
+                                    }),
+                                const Text("Patamar dois?"),
+                              ],
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: isWaterShortage,
+                        onChanged: (value) {
+                          setState(() {
+                            if (value!) {
+                              isWaterShortage = value;
+                              isBandeiraAmerela = false;
+                              isBandeiraVermelha = false;
+                              isBandeiraVermelhaPatamarUm = false;
+                              isBandeiraVermelhaPatamarDois = false;
+                            } else {
+                              isWaterShortage = value;
+                            }
+                          });
+                        },
+                      ),
+                      const Text("Bandeira escassez hídrica?"),
                     ],
                   ),
                   Row(
@@ -126,6 +220,9 @@ class _SettingsPageState extends State<SettingsPage> {
     prefs.setBool("YELLOW_FLAG", isBandeiraAmerela);
     prefs.setBool("RED_FLAG", isBandeiraVermelha);
     prefs.setBool("TEN_PERCENT", isTenPercentOthers);
+    prefs.setBool("LVL_ONE", isBandeiraVermelhaPatamarUm);
+    prefs.setBool("LVL_TWO", isBandeiraVermelhaPatamarDois);
+    prefs.setBool("WAT_SHORT", isWaterShortage);
 
     Navigator.pushReplacementNamed(context, "home");
   }
@@ -141,6 +238,9 @@ class _SettingsPageState extends State<SettingsPage> {
         isBandeiraAmerela = prefs.getBool("YELLOW_FLAG")!;
         isBandeiraVermelha = prefs.getBool("RED_FLAG")!;
         isTenPercentOthers = prefs.getBool("TEN_PERCENT")!;
+        isBandeiraVermelhaPatamarUm = prefs.getBool("LVL_ONE")!;
+        isBandeiraVermelhaPatamarDois = prefs.getBool("LVL_TWO")!;
+        isWaterShortage = prefs.getBool("WAT_SHORT")!;
       });
     }
   }
